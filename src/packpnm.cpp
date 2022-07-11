@@ -2805,8 +2805,7 @@ INTERN inline void set_extension( const char* filename, const char* extension )
 	char* extstr;
 	
 	// find position of extension in filename	
-	extstr = ( strrchr( filename, '.' ) == NULL ) ?
-		strrchr( filename, '\0' ) : strrchr( filename, '.' );
+	extstr = ( strrchr( filename, '.' ) == NULL ) ? (char*)strrchr( filename, '\0' ) : (char*)strrchr( filename, '.' );
 	
 	// set new extension
 	if ( extension != NULL ) {

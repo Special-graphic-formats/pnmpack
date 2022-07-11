@@ -1,21 +1,21 @@
 # packXXX Makefile, based on UniMake: Universal Makefile
 # Created by Matthias Stirner, 01/2016
 
-TARGET   = packPNM
+TARGET   = pnmpack
 CC       = gcc
 CPP      = g++
 RC       = windres -O coff
-CPPFLAGS = -I. -O3 -Wall -pedantic -funroll-loops -ffast-math -fsched-spec-load -fomit-frame-pointer
-LDFLAGS  = -static -static-libgcc -static-libstdc++
-CSRC     = $(wildcard *.c)
-CPPSRC   = $(wildcard *.cpp)
-DEPS     = $(wildcard *.h) Makefile
+CPPFLAGS = -I./src -O3 -Wall -pedantic -funroll-loops -ffast-math -fsched-spec-load -fomit-frame-pointer 
+LDFLAGS  = -s #-static -static-libgcc -static-libstdc++
+CSRC     = $(wildcard src/*.c)
+CPPSRC   = $(wildcard src/*.cpp)
+DEPS     = $(wildcard src/*.h) Makefile
 OBJ      = $(patsubst %.c,%.o,$(CSRC)) $(patsubst %.cpp,%.o,$(CPPSRC))
 
 # conditional stuff
 ifeq ($(OS),Windows_NT)
 LDFLAGS  += -lpthread -L libwinpthread-1.dll
-RES       = icons.res
+RES       = src/icons.res
 UPX      := -upx --best --lzma $(TARGET).exe
 else
 CPPFLAGS += -DUNIX
@@ -25,7 +25,7 @@ UPX       =
 endif
 
 %.o: %.cpp $(DEPS)
-	$(CPP) -c -o $@ $< $(CPPFLAGS)
+	$(CPP) $(CPPFLAGS) -c -o $@ $<
 	
 %.res: %.rc
 	@-$(RC) $< $@
@@ -53,4 +53,4 @@ dll: $(OBJ)
 
 clean:
 	@echo clean...
-	@-rm *.o *.a $(TARGET) $(TARGET).exe $(TARGET).dll
+	@-rm src/*.o src/*.a $(TARGET) $(TARGET).exe $(TARGET).dll
